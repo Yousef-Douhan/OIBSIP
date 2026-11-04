@@ -1,24 +1,20 @@
 require('dotenv').config({ quiet: true });
 const http = require('http');
-const { Server } = require('socket.io');
 const app = require('./app');
 const connectDB = require('./config/db');
+const { initSocket } = require('./services/socket.service');
+const { startStockAlertJob, checkLowStock } = require('./jobs/stockAlert.cron');
 
 const PORT = process.env.PORT || 5000;
 const server = http.createServer(app);
 
-const io = new Server(server, {
-  cors: { origin: process.env.CLIENT_URL, credentials: true },
-});
-app.set('io', io);
-
-io.on('connection', (socket) => {
-  console.log('Socket connected:', socket.id);
-});
+initSocket(server);
 
 (async () => {
   await connectDB();
+  startStockAlertJob();
+  checkLowStock(); // run once on start-up
   server.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
+    console.log(`Server running on http://localhost:${PORT} (payments: ${process.env.PAYMENT_PROVIDER || 'mock'})`);
   });
 })();
