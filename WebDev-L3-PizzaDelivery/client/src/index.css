@@ -1,0 +1,66 @@
+@import "tailwindcss";
+
+@theme {
+  /* Neapolitan pizzeria palette */
+  --color-basil: #1e4d2b;        /* primary: header, headings, links */
+  --color-basil-soft: #e6efe7;   /* tinted surfaces, selected rows */
+  --color-tomato: #c8321f;       /* actions: buttons, payment */
+  --color-tomato-dark: #a52714;
+  --color-crust: #e2a65c;        /* selection and highlights */
+  --color-crust-soft: #fbefdc;
+  --color-ink: #1d2420;          /* body text */
+  --color-muted: #5f6b63;        /* secondary text */
+  --color-line: #dfe3dc;         /* borders */
+  --color-page: #f5f6f1;         /* page background */
+
+  --font-display: "Young Serif", Georgia, serif;
+  --font-sans: "Figtree", system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+  }
+  body {
+    @apply bg-page text-ink font-sans;
+    font-size: 1rem;
+    line-height: 1.55;
+  }
+  h1, h2, h3 {
+    @apply font-display text-basil;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+  }
+  :focus-visible {
+    outline: 3px solid var(--color-crust);
+    outline-offset: 2px;
+  }
+}
+
+/* Tailwind v4: reusable classes are declared with @utility so they can be
+   combined with other utilities (and @apply'd inside each other). */
+@utility btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50;
+}
+@utility btn-primary {
+  @apply btn bg-tomato text-white hover:bg-tomato-dark;
+}
+@utility btn-secondary {
+  @apply btn border border-basil text-basil hover:bg-basil-soft;
+}
+@utility btn-quiet {
+  @apply btn px-3 text-muted hover:text-ink;
+}
+@utility input {
+  @apply w-full rounded-xl border border-line bg-white px-4 py-2.5 text-ink placeholder:text-muted/70 focus:border-basil focus:outline-none focus:ring-2 focus:ring-basil/20;
+}
+@utility panel {
+  @apply rounded-2xl border border-line bg-white;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
